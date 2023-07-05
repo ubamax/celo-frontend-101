@@ -5,7 +5,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 // Import ethers to format the price of the product correctly
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 // Import the useConnectModal hook to trigger the wallet connect modal
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 // Import the useAccount hook to get the user's address
@@ -39,11 +39,10 @@ const Product = ({ id, setError, setLoading, clear }: any) => {
   const { address } = useAccount();
   // Use the useContractCall hook to read the data of the product with the id passed in, from the marketplace contract
   const { data: rawProduct }: any = useContractCall("readProduct", [id], true);
-  //
+  // Use useContractSend to call placeBid in contract
   const {writeAsync: placeBid} = useContractSend("placeBid", [Number(id)], bidAmount);
-  //
+  // Use useContractSend to close bid in smart contract
   const {writeAsync: closeBid} = useContractSend("closeBid", [Number(id)]);
-  //
   const [product, setProduct] = useState<Product | null>(null);
   // Use the useConnectModal hook to trigger the wallet connect modal
   const { openConnectModal } = useConnectModal();
@@ -68,6 +67,7 @@ const Product = ({ id, setError, setLoading, clear }: any) => {
     getFormatProduct();
   }, [getFormatProduct]);
 
+  // Call the closeBid function to close a bid
   const close = async () => {
     setLoading("Closing bid ...");
     if (Number(product?.highestBidder) == 0) {
@@ -103,7 +103,7 @@ const Product = ({ id, setError, setLoading, clear }: any) => {
     }
   }
 
-
+  // Call the placeBid function to place a bid
   const handleBid = async () => {
     if (!placeBid) {
       throw "Failed to purchase this product";

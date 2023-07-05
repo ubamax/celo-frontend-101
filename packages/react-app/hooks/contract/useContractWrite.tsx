@@ -25,6 +25,7 @@ export const useContractSend = (functionName: string, args: Array<any>, value?: 
         // The gas limit to use when sending a transaction
         overrides: {
             gasLimit,
+            // Amount of ether to send along with the transaction
             value
         },
         onError: (err) => {
