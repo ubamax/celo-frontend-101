@@ -139,6 +139,7 @@ const Product = ({ id, setError, setLoading, clear }: any) => {
       // Once the purchase is complete, clear the loading state
     } finally {
       setLoading(null);
+      setBidAmount(0)
     }
   }
 
@@ -209,7 +210,7 @@ const Product = ({ id, setError, setLoading, clear }: any) => {
             </div>
             <div>
               {/* Amount of the highest bidder */}
-              <span className="italic ">Highest Bid: </span><span className="font-mono">{product.highestBid}</span>
+              <span className="italic ">Highest Bid: </span><span className="font-mono">{product.highestBid} CELO</span>
             </div>
           </div>
 
@@ -233,13 +234,13 @@ const Product = ({ id, setError, setLoading, clear }: any) => {
                   </button>: 
                   <div className="flex justify-center items-center">
                     <button onClick={bid} className="w-48 h-14 bg-blue-500 rounded-lg ">
-                      Bid
+                      Bid ({ethers.utils.formatEther(bidAmount)} CELO)
                     </button>
-                    <input onChange={e => setBidAmount(ethers.utils.parseEther(`${e.target.value || 0}`))} className="px-4 py-1 mx-3 w-28 rounded outline-gray-800" type="number" placeholder="Bid amount"/>
+                    <input min={Number(product.highestBid) + 1} onChange={e => setBidAmount(ethers.utils.parseEther(`${e.target.value || 0}`))} className="px-4 py-1 mx-3 w-28 rounded outline-gray-800" type="number" placeholder="Bid amount"/>
                   </div>
                 }
               </div> : 
-              <button disabled className="mt-4 h-14 w-full border-[1px] p-2 rounded-lg bg-black text-white">
+              <button disabled className="mt-4 h-14 w-[20rem] border-[1px] p-2 rounded-lg bg-black text-white">
                 Closed
               </button>
             }
